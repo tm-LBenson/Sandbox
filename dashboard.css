@@ -32,3 +32,6 @@ form input[type="submit"] {
 .session h3 {
     margin-top: 0;
 }
+.container{
+    height: auto;
+}

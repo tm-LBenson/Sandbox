@@ -1,42 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="global.css">
-    <link rel="stylesheet" href="dashboard.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="normalize.css" />
+    <link rel="stylesheet" href="global.css" />
+    <link rel="stylesheet" href="dashboard.css" />
     <title>Music Tracker</title>
-</head>
-<body>
+  </head>
+  <body>
+    <nav>
+      <a href="/">Music Practice Tracker</a>
+      <div>
+        <a class="selected" href="/dashboard.html">Dashboard</a>
+        <a href="/analytics.html">Analytics</a>
+      </div>
+    </nav>
+
     <main class="container">
       <h1>Music Practice Tracker</h1>
-  
+
       <form id="sessionForm">
         <label for="date">Date:</label>
-        <input type="date" id="date" name="date" required>
-  
+        <input type="date" id="date" name="date" required />
+
         <label for="startTime">Start Time:</label>
-        <input type="time" id="startTime" name="startTime" required>
-  
+        <input type="time" id="startTime" name="startTime" required />
+
         <label for="endTime">End Time:</label>
-        <input type="time" id="endTime" name="endTime" required>
-  
+        <input type="time" id="endTime" name="endTime" required />
+
         <label for="pieces">Pieces/Songs:</label>
-        <input type="text" id="pieces" name="pieces" required>
-  
+        <input type="text" id="pieces" name="pieces" required />
+
         <label for="notes">Notes:</label>
         <textarea id="notes" name="notes"></textarea>
-  
-        <input type="submit" value="Submit">
+
+        <input type="submit" value="Submit" />
       </form>
-  
+
       <h2>Total Practice Time: <span id="totalTime">0</span> minutes</h2>
-  
+
       <div id="sessionsList">
         <!-- Session entries will be appended here -->
       </div>
     </main>
-  
-    <script src="script.js"></script>
+
+    <script src="dashboard.js"></script>
   </body>
-  </html>
+</html>

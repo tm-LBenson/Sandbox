@@ -1,18 +1,59 @@
 .splash-container {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background: url('splash-background.jpg') no-repeat center center/cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: url('splash-background.jpg') no-repeat center center/cover;
 }
 
-.splash-container h1 {
-    font-size: 3em;
-    color: #fff;
+.hero-section {
+  text-align: center;
+  margin-bottom: 50px;
 }
 
-.splash-container p {
-    font-size: 1.5em;
-    color: #fff;
+.hero-section {
+  padding: 100px;
+  background-color: rgba(0, 0, 0, 0.7);
+  text-align: center;
+  margin-bottom: 50px;
+  color: #ffffff;
+}
+
+.hero-section p {
+  font-size: 1.5em;
+  margin-bottom: 30px;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 10px 20px;
+  color: #ffffff;
+  background-color: #007bff;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.features-section {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.feature {
+  background-color: #ffffff;
+  color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  width: 25%;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.feature h2 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.feature p {
+  font-size: 1.2em;
 }
