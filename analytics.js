@@ -32,7 +32,7 @@ function addChartForSong(song, songSessions) {
   let ctx = canvas.getContext('2d');
 
   new Chart(ctx, {
-    type: 'line',
+    type: 'bar',
     data: {
       labels: songSessions.map((session) => session.date),
       datasets: [

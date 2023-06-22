@@ -1,3 +1,9 @@
-.container{
-    height: auto;
+.container {
+  height: auto;
+}
+
+#chartsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 50px;
 }

@@ -21,6 +21,29 @@ function submitForm(e) {
   const startTime = document.getElementById('startTime').value;
   const endTime = document.getElementById('endTime').value;
 
+  const sessionDate = new Date(date);
+  const start = new Date(`1970-01-01T${startTime}Z`);
+  const end = new Date(`1970-01-01T${endTime}Z`);
+
+
+  const now = new Date();
+  if (sessionDate > now) {
+    alert('The date cannot be in the future.');
+    return;
+  }
+
+
+  if (start >= end) {
+    alert('The start time must be before the end time.');
+    return;
+  }
+
+ 
+  if (!pieces.trim()) {
+    alert('The pieces/songs field cannot be empty.');
+    return;
+  }
+
   const sessionLength = calculateSessionLength(startTime, endTime);
   updateTotal(sessionLength);
 
