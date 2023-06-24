@@ -25,20 +25,17 @@ function submitForm(e) {
   const start = new Date(`1970-01-01T${startTime}Z`);
   const end = new Date(`1970-01-01T${endTime}Z`);
 
-
   const now = new Date();
   if (sessionDate > now) {
     alert('The date cannot be in the future.');
     return;
   }
 
-
   if (start >= end) {
     alert('The start time must be before the end time.');
     return;
   }
 
- 
   if (!pieces.trim()) {
     alert('The pieces/songs field cannot be empty.');
     return;
@@ -82,3 +79,21 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.getElementById('sessionForm').addEventListener('submit', submitForm);
+
+let modal = document.getElementById('myModal');
+let btn = document.getElementById('myBtn');
+let span = document.getElementsByClassName('close')[0];
+
+btn.onclick = function () {
+  modal.style.display = 'block';
+};
+
+span.onclick = function () {
+  modal.style.display = 'none';
+};
+
+window.onclick = function (event) {
+  if (event.target == modal) {
+    modal.style.display = 'none';
+  }
+};
