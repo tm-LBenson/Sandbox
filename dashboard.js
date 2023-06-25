@@ -1,6 +1,6 @@
 function calculateSessionLength(startTime, endTime) {
-  const start = new Date(`1970-01-01T${startTime}Z`);
-  const end = new Date(`1970-01-01T${endTime}Z`);
+  const start = new Date(`1970-01-01T${startTime}`);
+  const end = new Date(`1970-01-01T${endTime}`);
   const sessionLength = (end - start) / 1000 / 60;
   return sessionLength;
 }
@@ -20,10 +20,11 @@ function submitForm(e) {
   const notes = document.getElementById('notes').value;
   const startTime = document.getElementById('startTime').value;
   const endTime = document.getElementById('endTime').value;
-
-  const sessionDate = new Date(date);
-  const start = new Date(`1970-01-01T${startTime}Z`);
-  const end = new Date(`1970-01-01T${endTime}Z`);
+  const [year, month, day] = date.split('-').map(Number);
+  const sessionDate = new Date(Date.UTC(year, month - 1, day));
+  const utcDate = sessionDate.toISOString().split('T')[0];
+  const start = new Date(`1970-01-01T${startTime}`);
+  const end = new Date(`1970-01-01T${endTime}`);
 
   const now = new Date();
   if (sessionDate > now) {
@@ -45,7 +46,7 @@ function submitForm(e) {
   updateTotal(sessionLength);
 
   const session = {
-    date: date,
+    date: utcDate,
     pieces: pieces,
     notes: notes,
     sessionLength: sessionLength,
@@ -62,8 +63,9 @@ function submitForm(e) {
 function addSessionToDOM(session) {
   const sessionDiv = document.createElement('div');
   sessionDiv.classList.add('session');
+  const localDate = new Date(session.date).toLocaleDateString();
   sessionDiv.innerHTML = `
-    <h3>${session.date}: ${session.pieces}</h3>
+    <h3>${localDate}: ${session.pieces}</h3>
     <p>${session.sessionLength} minutes</p>
     <p>Notes: ${session.notes}</p>
   `;

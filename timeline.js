@@ -61,8 +61,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const sortedDates = Object.keys(groupedSessions).sort();
 
-  let startDate = new Date(sortedDates[0]);
-  let endDate = new Date(sortedDates[sortedDates.length - 1]);
+  let startDate = new Date(new Date(sortedDates[0]).toLocaleDateString());
+  let endDate = new Date(
+    new Date(sortedDates[sortedDates.length - 1]).toLocaleDateString()
+  );
 
   for (let day = startDate; day <= endDate; day.setDate(day.getDate() + 1)) {
     const sessionLength = groupedSessions[day.toISOString().split('T')[0]] || 0;
