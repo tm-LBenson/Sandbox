@@ -82,3 +82,43 @@ form input[type='submit'] {
   text-decoration: none;
   cursor: pointer;
 }
+
+/* Timeline */
+
+.calendar-card {
+  width: 40px;
+  height: 60px;
+  border: 1px solid black;
+  margin: 5px;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+.calendar-card .dots {
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-card[data-has-session='true'] {
+  background-color: #ffdab9;
+}
+
+#timeline {
+  display: flex;
+  overflow-x: scroll;
+  scrollbar-width: none; /* For Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#timeline::-webkit-scrollbar {
+  display: none;
+}
+
+.calendar-card div {
+  text-align: center;
+}
