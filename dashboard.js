@@ -13,8 +13,6 @@ function updateTotal(sessionLength) {
 }
 
 function submitForm(e) {
-  e.preventDefault();
-
   const date = document.getElementById('date').value;
   const pieces = document.getElementById('pieces').value;
   const notes = document.getElementById('notes').value;
