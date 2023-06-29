@@ -58,10 +58,9 @@ document.addEventListener('DOMContentLoaded', function () {
   let groupedSessions = groupSessionsByDate(sessions);
 
   const sortedDates = Object.keys(groupedSessions).sort();
-  console.log(sortedDates);
+
   let startDate = new Date(sortedDates[0]);
   let endDate = new Date(sortedDates[sortedDates.length - 1]);
-  console.log(startDate, endDate);
 
   for (
     let day = new Date(startDate);
