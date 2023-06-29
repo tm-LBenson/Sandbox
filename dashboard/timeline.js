@@ -1,8 +1,6 @@
 function DayCard(date, dayOfWeek, sessionLength) {
-  this.date = new Date(date).getDate();
-  this.dayOfWeek = new Date(date).toLocaleString('default', {
-    weekday: 'short',
-  });
+  this.date = new Date(date).getDate() + 1;
+  this.dayOfWeek = dayOfWeek;
   this.sessionLength = sessionLength;
 }
 
@@ -60,16 +58,19 @@ document.addEventListener('DOMContentLoaded', function () {
   let groupedSessions = groupSessionsByDate(sessions);
 
   const sortedDates = Object.keys(groupedSessions).sort();
+  console.log(sortedDates);
+  let startDate = new Date(sortedDates[0]);
+  let endDate = new Date(sortedDates[sortedDates.length - 1]);
+  console.log(startDate, endDate);
 
-  let startDate = new Date(new Date(sortedDates[0]).toLocaleDateString());
-  let endDate = new Date(
-    new Date(sortedDates[sortedDates.length - 1]).toLocaleDateString()
-  );
-
-  for (let day = startDate; day <= endDate; day.setDate(day.getDate() + 1)) {
+  for (
+    let day = new Date(startDate);
+    day <= endDate;
+    day.setDate(day.getDate() + 1)
+  ) {
     const sessionLength = groupedSessions[day.toISOString().split('T')[0]] || 0;
     let dayCard = new DayCard(
-      day,
+      new Date(day + 1),
       day.toLocaleString('default', { weekday: 'short' }),
       sessionLength
     );

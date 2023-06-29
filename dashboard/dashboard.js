@@ -1,14 +1,9 @@
-function calculateSessionLength(startTime, endTime) {
-  const start = new Date(`1970-01-01T${startTime}`);
-  const end = new Date(`1970-01-01T${endTime}`);
-  const sessionLength = (end - start) / 1000 / 60;
-  return sessionLength;
-}
-
 function updateTotal(sessionLength) {
-  const totalTime = localStorage.getItem('totalTime') || '0';
-  const newTotalTime = parseFloat(totalTime) + sessionLength;
+  console.log(sessionLength);
+  const totalTime = parseFloat(localStorage.getItem('totalTime')) || 0;
+  const newTotalTime = totalTime + sessionLength;
   localStorage.setItem('totalTime', newTotalTime.toString());
+  console.log(newTotalTime);
   document.getElementById('totalTime').textContent = newTotalTime;
 }
 
@@ -18,20 +13,14 @@ function submitForm(e) {
   const notes = document.getElementById('notes').value;
   const startTime = document.getElementById('startTime').value;
   const endTime = document.getElementById('endTime').value;
+
   const [year, month, day] = date.split('-').map(Number);
-  const sessionDate = new Date(Date.UTC(year, month - 1, day));
+  const sessionDate = new Date(year, month - 1, day);
   const utcDate = sessionDate.toISOString().split('T')[0];
-  const start = new Date(`1970-01-01T${startTime}`);
-  const end = new Date(`1970-01-01T${endTime}`);
 
   const now = new Date();
   if (sessionDate > now) {
     alert('The date cannot be in the future.');
-    return;
-  }
-
-  if (start >= end) {
-    alert('The start time must be before the end time.');
     return;
   }
 
@@ -40,7 +29,10 @@ function submitForm(e) {
     return;
   }
 
-  const sessionLength = calculateSessionLength(startTime, endTime);
+  const sessionStart = new Date(`${date}T${startTime}`);
+  const sessionEnd = new Date(`${date}T${endTime}`);
+  const sessionLength = calculateSessionLength(sessionStart, sessionEnd);
+
   updateTotal(sessionLength);
 
   const session = {
@@ -48,6 +40,8 @@ function submitForm(e) {
     pieces: pieces,
     notes: notes,
     sessionLength: sessionLength,
+    startTime: startTime,
+    endTime: endTime,
   };
 
   let sessions = JSON.parse(localStorage.getItem('sessions')) || [];
@@ -58,10 +52,18 @@ function submitForm(e) {
   document.getElementById('sessionForm').reset();
 }
 
+function calculateSessionLength(start, end) {
+  const sessionLength = (end.getTime() - start.getTime()) / 1000 / 60;
+  return sessionLength;
+}
+
 function addSessionToDOM(session) {
   const sessionDiv = document.createElement('div');
   sessionDiv.classList.add('session');
-  const localDate = new Date(session.date).toLocaleDateString();
+
+  const [year, month, day] = session.date.split('-').map(Number);
+  const localDate = new Date(year, month - 1, day).toLocaleDateString();
+
   sessionDiv.innerHTML = `
     <h3>${localDate}: ${session.pieces}</h3>
     <p>${session.sessionLength} minutes</p>
