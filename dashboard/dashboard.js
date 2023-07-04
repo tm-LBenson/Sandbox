@@ -7,6 +7,28 @@ function updateTotal(sessionLength) {
   document.getElementById('totalTime').textContent = newTotalTime;
 }
 
+function PracticeSession(date, pieces, notes, sessionLength, startsAt, endsAt) {
+  this.date = date;
+  this.pieces = pieces;
+  this.notes = notes;
+  this.sessionLength = sessionLength;
+  this.startsAt = startsAt;
+  this.endsAt = endsAt;
+}
+
+PracticeSession.prototype.render = function () {
+  const card = document.createElement('div');
+  card.classList.add('session');
+  const [year, month, day] = this.date.split('-').map(Number);
+  const localDate = new Date(year, month - 1, day).toLocaleDateString();
+  card.innerHTML = `
+    <h3>${localDate}: ${this.pieces}</h3>
+    <p>${this.sessionLength} minutes</p>
+    <p>${this.notes}</p>
+    `;
+  document.getElementById('sessionsList').appendChild(card);
+};
+
 function submitForm(e) {
   const date = document.getElementById('date').value;
   const pieces = document.getElementById('pieces').value;
@@ -35,20 +57,20 @@ function submitForm(e) {
 
   updateTotal(sessionLength);
 
-  const session = {
-    date: utcDate,
-    pieces: pieces,
-    notes: notes,
-    sessionLength: sessionLength,
-    startTime: startTime,
-    endTime: endTime,
-  };
+  const session = new PracticeSession(
+    utcDate,
+    pieces,
+    notes,
+    sessionLength,
+    startTime,
+    endTime
+  );
 
   let sessions = JSON.parse(localStorage.getItem('sessions')) || [];
   sessions.push(session);
   localStorage.setItem('sessions', JSON.stringify(sessions));
 
-  addSessionToDOM(session);
+  session.render();
   document.getElementById('sessionForm').reset();
 }
 
@@ -57,27 +79,23 @@ function calculateSessionLength(start, end) {
   return sessionLength;
 }
 
-function addSessionToDOM(session) {
-  const sessionDiv = document.createElement('div');
-  sessionDiv.classList.add('session');
-
-  const [year, month, day] = session.date.split('-').map(Number);
-  const localDate = new Date(year, month - 1, day).toLocaleDateString();
-
-  sessionDiv.innerHTML = `
-    <h3>${localDate}: ${session.pieces}</h3>
-    <p>${session.sessionLength} minutes</p>
-    <p>Notes: ${session.notes}</p>
-  `;
-  document.getElementById('sessionsList').appendChild(sessionDiv);
-}
-
 document.addEventListener('DOMContentLoaded', function () {
   const totalTime = parseFloat(localStorage.getItem('totalTime')) || 0;
   document.getElementById('totalTime').textContent = totalTime;
 
   let sessions = JSON.parse(localStorage.getItem('sessions')) || [];
-  sessions.forEach((session) => addSessionToDOM(session));
+  sessions = sessions.map(
+    (session) =>
+      new PracticeSession(
+        session.date,
+        session.pieces,
+        session.notes,
+        session.sessionLength,
+        session.startsAt,
+        session.endsAt
+      )
+  );
+  sessions.forEach((session) => session.render());
 });
 
 document.getElementById('sessionForm').addEventListener('submit', submitForm);
