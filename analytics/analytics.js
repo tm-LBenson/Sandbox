@@ -1,15 +1,17 @@
-document.addEventListener('DOMContentLoaded', function () {
-  let sessions = JSON.parse(localStorage.getItem('sessions')) || [];
-  let groupedSessions = groupSessionsBySong(sessions);
+function PracticeStats() {
+  this.sessions = JSON.parse(localStorage.getItem('sessions')) || [];
+  this.groupedSessions = this.groupSessionsBySong();
+}
 
-  for (let song in groupedSessions) {
-    addChartForSong(song, groupedSessions[song]);
+PracticeStats.prototype.init = function () {
+  for (let song in this.groupedSessions) {
+    this.addChartForSong(song, this.groupedSessions[song]);
   }
-});
+};
 
-function groupSessionsBySong(sessions) {
+PracticeStats.prototype.groupSessionsBySong = function () {
   let groups = {};
-  sessions.forEach((session) => {
+  this.sessions.forEach((session) => {
     if (groups[session.pieces]) {
       groups[session.pieces].push(session);
     } else {
@@ -17,9 +19,9 @@ function groupSessionsBySong(sessions) {
     }
   });
   return groups;
-}
+};
 
-function addChartForSong(song, songSessions) {
+PracticeStats.prototype.addChartForSong = function (song, songSessions) {
   let chartContainer = document.createElement('div');
   chartContainer.style.width = '400px';
   chartContainer.style.height = '400px';
@@ -50,4 +52,9 @@ function addChartForSong(song, songSessions) {
       maintainAspectRatio: false,
     },
   });
-}
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+  let practiceStats = new PracticeStats();
+  practiceStats.init();
+});

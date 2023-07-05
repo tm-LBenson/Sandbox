@@ -1,35 +1,48 @@
-function updateTotal(sessionLength) {
-  console.log(sessionLength);
-  const totalTime = parseFloat(localStorage.getItem('totalTime')) || 0;
-  const newTotalTime = totalTime + sessionLength;
-  localStorage.setItem('totalTime', newTotalTime.toString());
-  console.log(newTotalTime);
-  document.getElementById('totalTime').textContent = newTotalTime;
+function PracticeTracker() {
+  this.modal = document.getElementById('myModal');
+  this.addMusicPracticeBtn = document.getElementById('myBtn');
+  this.modalCloseBtn = document.getElementsByClassName('close')[0];
+  this.musicPracticeForm = document.getElementById('sessionForm');
 }
 
-function PracticeSession(date, pieces, notes, sessionLength, startsAt, endsAt) {
-  this.date = date;
-  this.pieces = pieces;
-  this.notes = notes;
-  this.sessionLength = sessionLength;
-  this.startsAt = startsAt;
-  this.endsAt = endsAt;
-}
-
-PracticeSession.prototype.render = function () {
-  const card = document.createElement('div');
-  card.classList.add('session');
-  const [year, month, day] = this.date.split('-').map(Number);
-  const localDate = new Date(year, month - 1, day).toLocaleDateString();
-  card.innerHTML = `
-    <h3>${localDate}: ${this.pieces}</h3>
-    <p>${this.sessionLength} minutes</p>
-    <p>${this.notes}</p>
-    `;
-  document.getElementById('sessionsList').appendChild(card);
+PracticeTracker.prototype.initializeTracker = function () {
+  this.bindEvents();
+  this.loadSavedMusicPractices();
 };
 
-function submitForm(e) {
+PracticeTracker.prototype.bindEvents = function () {
+  let self = this;
+
+  this.addMusicPracticeBtn.onclick = function () {
+    self.modal.style.display = 'block';
+  };
+
+  this.modalCloseBtn.onclick = function () {
+    self.modal.style.display = 'none';
+  };
+
+  window.onclick = function (event) {
+    if (event.target === self.modal) {
+      self.modal.style.display = 'none';
+    }
+  };
+
+  this.musicPracticeForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    self.handleMusicPracticeFormSubmit(e);
+  });
+};
+
+PracticeTracker.prototype.updateTotalPracticeTime = function (
+  musicPracticeLength
+) {
+  let totalTime = parseFloat(localStorage.getItem('totalTime')) || 0;
+  let newTotalTime = totalTime + musicPracticeLength;
+  localStorage.setItem('totalTime', newTotalTime.toString());
+  document.getElementById('totalTime').textContent = newTotalTime;
+};
+
+PracticeTracker.prototype.handleMusicPracticeFormSubmit = function (e) {
   const date = document.getElementById('date').value;
   const pieces = document.getElementById('pieces').value;
   const notes = document.getElementById('notes').value;
@@ -53,67 +66,86 @@ function submitForm(e) {
 
   const sessionStart = new Date(`${date}T${startTime}`);
   const sessionEnd = new Date(`${date}T${endTime}`);
-  const sessionLength = calculateSessionLength(sessionStart, sessionEnd);
+  const musicPracticeLength = this.calculateMusicPracticeLength(
+    sessionStart,
+    sessionEnd
+  );
 
-  updateTotal(sessionLength);
+  this.updateTotalPracticeTime(musicPracticeLength);
 
-  const session = new PracticeSession(
+  const musicPractice = new MusicPractice(
     utcDate,
     pieces,
     notes,
-    sessionLength,
+    musicPracticeLength,
     startTime,
     endTime
   );
 
-  let sessions = JSON.parse(localStorage.getItem('sessions')) || [];
-  sessions.push(session);
-  localStorage.setItem('sessions', JSON.stringify(sessions));
+  let musicPractices = JSON.parse(localStorage.getItem('sessions')) || [];
+  musicPractices.push(musicPractice);
+  localStorage.setItem('sessions', JSON.stringify(musicPractices));
 
-  session.render();
+  musicPractice.renderMusicPracticeCard();
   document.getElementById('sessionForm').reset();
-}
+};
 
-function calculateSessionLength(start, end) {
-  const sessionLength = (end.getTime() - start.getTime()) / 1000 / 60;
-  return sessionLength;
-}
+PracticeTracker.prototype.calculateMusicPracticeLength = function (start, end) {
+  let musicPracticeLength = (end.getTime() - start.getTime()) / 1000 / 60;
+  return musicPracticeLength;
+};
 
-document.addEventListener('DOMContentLoaded', function () {
-  const totalTime = parseFloat(localStorage.getItem('totalTime')) || 0;
+PracticeTracker.prototype.loadSavedMusicPractices = function () {
+  let totalTime = parseFloat(localStorage.getItem('totalTime')) || 0;
   document.getElementById('totalTime').textContent = totalTime;
 
-  let sessions = JSON.parse(localStorage.getItem('sessions')) || [];
-  sessions = sessions.map(
-    (session) =>
-      new PracticeSession(
-        session.date,
-        session.pieces,
-        session.notes,
-        session.sessionLength,
-        session.startsAt,
-        session.endsAt
-      )
-  );
-  sessions.forEach((session) => session.render());
-});
+  let musicPracticesData = JSON.parse(localStorage.getItem('sessions')) || [];
+  let musicPractices = [];
+  for (let i = 0; i < musicPracticesData.length; i++) {
+    let musicPractice = new MusicPractice(
+      musicPracticesData[i].date,
+      musicPracticesData[i].pieces,
+      musicPracticesData[i].notes,
+      musicPracticesData[i].sessionLength,
+      musicPracticesData[i].startTime,
+      musicPracticesData[i].endTime
+    );
+    musicPractices.push(musicPractice);
+  }
 
-document.getElementById('sessionForm').addEventListener('submit', submitForm);
-
-let modal = document.getElementById('myModal');
-let btn = document.getElementById('myBtn');
-let span = document.getElementsByClassName('close')[0];
-
-btn.onclick = function () {
-  modal.style.display = 'block';
-};
-
-span.onclick = function () {
-  modal.style.display = 'none';
-};
-
-window.onclick = function (event) {
-  if (event.target == modal) {
-    modal.style.display = 'none';
+  for (let i = 0; i < musicPractices.length; i++) {
+    musicPractices[i].renderMusicPracticeCard();
   }
 };
+
+function MusicPractice(
+  date,
+  pieces,
+  notes,
+  musicPracticeLength,
+  startsAt,
+  endsAt
+) {
+  this.date = date;
+  this.pieces = pieces;
+  this.notes = notes;
+  this.musicPracticeLength = musicPracticeLength;
+  this.startsAt = startsAt;
+  this.endsAt = endsAt;
+}
+
+MusicPractice.prototype.renderMusicPracticeCard = function () {
+  let card = document.createElement('div');
+  card.classList.add('session');
+  let [year, month, day] = this.date.split('-').map(Number);
+  let localDate = new Date(year, month - 1, day).toLocaleDateString();
+  card.innerHTML = `
+    <h3>${localDate}: ${this.pieces}</h3>
+    <p>${this.musicPracticeLength} minutes</p>
+    <p>${this.notes}</p>
+    `;
+  document.getElementById('musicPracticesList').prepend(card);
+};
+
+let practiceTracker = new PracticeTracker();
+practiceTracker.initializeTracker();
