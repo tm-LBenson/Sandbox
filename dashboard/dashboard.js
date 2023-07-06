@@ -1,38 +1,44 @@
+// Define the PracticeTracker constructor function
 function PracticeTracker() {
   this.modal = document.getElementById('myModal');
   this.addMusicPracticeBtn = document.getElementById('myBtn');
   this.modalCloseBtn = document.getElementsByClassName('close')[0];
   this.musicPracticeForm = document.getElementById('sessionForm');
 }
-
+// Define the initialization method for the PracticeTracker
 PracticeTracker.prototype.initializeTracker = function () {
+  // Bind click and submit events
   this.bindEvents();
+  // Load any saved music practice data from localStorage
   this.loadSavedMusicPractices();
 };
-
+// Define the method to bind events
 PracticeTracker.prototype.bindEvents = function () {
-  let self = this;
+  let self = this; // Store context for callback functions
 
+  // Show the modal when the "Add Music Practice" button is clicked
   this.addMusicPracticeBtn.onclick = function () {
     self.modal.style.display = 'block';
   };
-
+  // Hide the modal when the close button is clicked
   this.modalCloseBtn.onclick = function () {
     self.modal.style.display = 'none';
   };
 
+  // Hide the modal if clicked outside of it
   window.onclick = function (event) {
     if (event.target === self.modal) {
       self.modal.style.display = 'none';
     }
   };
-
+  // Handle the form submission
   this.musicPracticeForm.addEventListener('submit', function (e) {
     e.preventDefault();
     self.handleMusicPracticeFormSubmit(e);
   });
 };
 
+// Define the method to update the total practice time stored in localStorage
 PracticeTracker.prototype.updateTotalPracticeTime = function (
   musicPracticeLength
 ) {
@@ -42,6 +48,7 @@ PracticeTracker.prototype.updateTotalPracticeTime = function (
   document.getElementById('totalTime').textContent = newTotalTime;
 };
 
+// Define the method to handle the form submission
 PracticeTracker.prototype.handleMusicPracticeFormSubmit = function (e) {
   const date = document.getElementById('date').value;
   const pieces = document.getElementById('pieces').value;
@@ -90,11 +97,13 @@ PracticeTracker.prototype.handleMusicPracticeFormSubmit = function (e) {
   document.getElementById('sessionForm').reset();
 };
 
+// Define the method to calculate the length of a music practice session
 PracticeTracker.prototype.calculateMusicPracticeLength = function (start, end) {
   let musicPracticeLength = (end.getTime() - start.getTime()) / 1000 / 60;
   return musicPracticeLength;
 };
 
+// Define the method to load saved music practices from localStorage
 PracticeTracker.prototype.loadSavedMusicPractices = function () {
   let totalTime = parseFloat(localStorage.getItem('totalTime')) || 0;
   document.getElementById('totalTime').textContent = totalTime;
@@ -118,6 +127,7 @@ PracticeTracker.prototype.loadSavedMusicPractices = function () {
   }
 };
 
+// Define the MusicPractice constructor function
 function MusicPractice(
   date,
   pieces,
@@ -134,6 +144,7 @@ function MusicPractice(
   this.endsAt = endsAt;
 }
 
+// Define the method to render a music practice card
 MusicPractice.prototype.renderMusicPracticeCard = function () {
   let card = document.createElement('div');
   card.classList.add('session');
@@ -147,5 +158,6 @@ MusicPractice.prototype.renderMusicPracticeCard = function () {
   document.getElementById('musicPracticesList').prepend(card);
 };
 
+// Instantiate the PracticeTracker and initialize it
 let practiceTracker = new PracticeTracker();
 practiceTracker.initializeTracker();
