@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../stylesheets/normalize.css" />
+    <link rel="stylesheet" href="../stylesheets/global.css" />
+    <link rel="stylesheet" href="../stylesheets/dashboard.css" />
+    <title>Music Tracker</title>
+  </head>
+  <body>
+    <nav>
+      <a href="../index.html">Music Practice Tracker</a>
+      <div>
+        <a href="../dashboard/index.html">Dashboard</a>
+        <a class="selected" href="../analytics/index.html">Analytics</a>
+      </div>
+    </nav>
+
+    <main class="container">
+      <section id="timeline"></section>
+      <h1>Music Practice Tracker</h1>
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+
+          <form id="sessionForm">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required />
+
+            <label for="startTime">Start Time:</label>
+            <input type="time" id="startTime" name="startTime" required />
+
+            <label for="endTime">End Time:</label>
+            <input type="time" id="endTime" name="endTime" required />
+
+            <label for="pieces">Pieces/Songs:</label>
+            <input type="text" id="pieces" name="pieces" required />
+
+            <label for="notes">Notes:</label>
+            <textarea id="notes" name="notes"></textarea>
+
+            <input type="submit" value="Submit" />
+          </form>
+        </div>
+      </div>
+      <button id="myBtn">Add Session</button>
+
+      <h2>Total Practice Time: <span id="totalTime">0</span> minutes</h2>
+
+      <div id="musicPracticesList">
+        <!-- Session entries will be appended here -->
+      </div>
+    </main>
+
+    <script src="dashboard.js"></script>
+    <script src="timeline.js"></script>
+  </body>
+</html>
