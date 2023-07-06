@@ -33,17 +33,14 @@ PracticeTracker.prototype.bindEvents = function () {
   };
   // Handle the form submission
   this.musicPracticeForm.addEventListener('submit', function (e) {
-    e.preventDefault();
     self.handleMusicPracticeFormSubmit(e);
   });
 };
 
 // Define the method to update the total practice time stored in localStorage
-PracticeTracker.prototype.updateTotalPracticeTime = function (
-  musicPracticeLength
-) {
+PracticeTracker.prototype.updateTotalPracticeTime = function (sessionLength) {
   let totalTime = parseFloat(localStorage.getItem('totalTime')) || 0;
-  let newTotalTime = totalTime + musicPracticeLength;
+  let newTotalTime = totalTime + sessionLength;
   localStorage.setItem('totalTime', newTotalTime.toString());
   document.getElementById('totalTime').textContent = newTotalTime;
 };
@@ -73,18 +70,18 @@ PracticeTracker.prototype.handleMusicPracticeFormSubmit = function (e) {
 
   const sessionStart = new Date(`${date}T${startTime}`);
   const sessionEnd = new Date(`${date}T${endTime}`);
-  const musicPracticeLength = this.calculateMusicPracticeLength(
+  const sessionLength = this.calculateMusicPracticeLength(
     sessionStart,
     sessionEnd
   );
 
-  this.updateTotalPracticeTime(musicPracticeLength);
+  this.updateTotalPracticeTime(sessionLength);
 
   const musicPractice = new MusicPractice(
     utcDate,
     pieces,
     notes,
-    musicPracticeLength,
+    sessionLength,
     startTime,
     endTime
   );
@@ -99,8 +96,8 @@ PracticeTracker.prototype.handleMusicPracticeFormSubmit = function (e) {
 
 // Define the method to calculate the length of a music practice session
 PracticeTracker.prototype.calculateMusicPracticeLength = function (start, end) {
-  let musicPracticeLength = (end.getTime() - start.getTime()) / 1000 / 60;
-  return musicPracticeLength;
+  let sessionLength = (end.getTime() - start.getTime()) / 1000 / 60;
+  return sessionLength;
 };
 
 // Define the method to load saved music practices from localStorage
@@ -128,18 +125,11 @@ PracticeTracker.prototype.loadSavedMusicPractices = function () {
 };
 
 // Define the MusicPractice constructor function
-function MusicPractice(
-  date,
-  pieces,
-  notes,
-  musicPracticeLength,
-  startsAt,
-  endsAt
-) {
+function MusicPractice(date, pieces, notes, sessionLength, startsAt, endsAt) {
   this.date = date;
   this.pieces = pieces;
   this.notes = notes;
-  this.musicPracticeLength = musicPracticeLength;
+  this.sessionLength = sessionLength;
   this.startsAt = startsAt;
   this.endsAt = endsAt;
 }
@@ -152,7 +142,7 @@ MusicPractice.prototype.renderMusicPracticeCard = function () {
   let localDate = new Date(year, month - 1, day).toLocaleDateString();
   card.innerHTML = `
     <h3>${localDate}: ${this.pieces}</h3>
-    <p>${this.musicPracticeLength} minutes</p>
+    <p>${this.sessionLength} minutes</p>
     <p>${this.notes}</p>
     `;
   document.getElementById('musicPracticesList').prepend(card);
