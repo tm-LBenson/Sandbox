@@ -1,5 +1,5 @@
-// Define the DayCard class. This represents a single day on the calendar.
-// It takes a date, day of the week, and session length as input.
+//* Define the DayCard class. This represents a single day on the calendar.
+//* It takes a date, day of the week, and session length as input.
 function DayCard(date, dayOfWeek, sessionLength) {
   // The date of the DayCard instance.
   this.date = new Date(date).getDate();
@@ -11,7 +11,7 @@ function DayCard(date, dayOfWeek, sessionLength) {
   this.sessionLength = sessionLength;
 }
 
-// Method to render the DayCard instance as a calendar card in HTML.
+//* Method to render the DayCard instance as a calendar card in HTML.
 DayCard.prototype.render = function () {
   // Create a new 'div' element for the card.
   const card = document.createElement('div');
@@ -38,7 +38,7 @@ DayCard.prototype.render = function () {
   document.getElementById('timeline').appendChild(card);
 };
 
-// Method to return a visual representation of the session length.
+//* Method to return a visual representation of the session length.
 DayCard.prototype.getDots = function () {
   // If the session length is 0, return an empty string.
   if (this.sessionLength === 0) {
@@ -63,7 +63,7 @@ DayCard.prototype.getDots = function () {
   return dots;
 };
 
-// Define the PracticeTimeline class. This represents the overall timeline of practice sessions.
+//* Define the PracticeTimeline class. This represents the overall timeline of practice sessions.
 function PracticeTimeline() {
   // Retrieve the sessions from local storage and parse them as JSON. If there are no sessions, use an empty array.
   this.sessions = JSON.parse(localStorage.getItem('sessions')) || [];
@@ -75,26 +75,39 @@ function PracticeTimeline() {
   this.groupedSessions = this.groupSessionsByDate();
 }
 
-// Method to extract the unique dates from the sessions.
+//* Method to extract the unique dates from the sessions.
 PracticeTimeline.prototype.extractUniqueDates = function () {
-  // Use the reduce function to create an array of unique dates.
-  const uniqueDates = this.sessions.reduce((acc, session) => {
-    const date = session.date.split('T')[0];
-    if (!acc.includes(date)) {
-      acc.push(date);
-    }
-    return acc;
-  }, []);
+  // Create an empty array to hold unique dates.
+  const uniqueDates = [];
 
-  // Sort the unique dates in ascending order.
+  // Loop through the sessions array.
+  for (let i = 0; i < this.sessions.length; i++) {
+    const session = this.sessions[i];
+    const date = session.date.split('T')[0];
+
+    // Check if the date is already in the uniqueDates array.
+    let isUnique = true;
+    for (let j = 0; j < uniqueDates.length; j++) {
+      if (uniqueDates[j] === date) {
+        isUnique = false;
+        break;
+      }
+    }
+
+    // If the date is unique, add it to the uniqueDates array.
+    if (isUnique) {
+      uniqueDates.push(date);
+    }
+  }
+
+  // Sort the uniqueDates array in ascending order.
   uniqueDates.sort();
 
-  // Return the array of unique dates.
+  // Return the sorted array of unique dates.
   return uniqueDates;
 };
 
-// Method```javascript
-// Method to group the sessions by their dates.
+//* Method to group the sessions by their dates.
 PracticeTimeline.prototype.groupSessionsByDate = function () {
   // Create an object to store the grouped sessions.
   const grouped = {};
@@ -117,7 +130,7 @@ PracticeTimeline.prototype.groupSessionsByDate = function () {
   return grouped;
 };
 
-// Method to initialize the PracticeTimeline instance.
+//* Method to initialize the PracticeTimeline instance.
 PracticeTimeline.prototype.init = function () {
   // Get the start and end dates from the 'uniqueDates' array.
   let start = this.uniqueDates[0].split('-');
@@ -148,7 +161,7 @@ PracticeTimeline.prototype.init = function () {
   }
 };
 
-// When the document is loaded, create a new PracticeTimeline instance and initialize it.
+//* When the document is loaded, create a new PracticeTimeline instance and initialize it.
 document.addEventListener('DOMContentLoaded', function () {
   let practiceTimeline = new PracticeTimeline();
   practiceTimeline.init();
