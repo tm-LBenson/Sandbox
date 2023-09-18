@@ -1,5 +1,6 @@
 //* Define the PracticeTracker constructor function
 function PracticeTracker() {
+  // Refactor from global variables to encapsulate state in the constructor
   this.modal = document.getElementById('myModal');
   this.modalCloseBtn = document.getElementsByClassName('close')[0];
   this.musicPracticeForm = document.getElementById('sessionForm');
